@@ -5,4 +5,5 @@ Objectif : créer un jeu casse birque en respectant les bonnes manières
 To do : 
 """
 
-vhxjkckqbdvk
+def main():
+    print("test")
