@@ -5,5 +5,8 @@ Objectif : créer un jeu casse birque en respectant les bonnes manières
 To do : 
 """
 
-def main():
-    print("test")
+classe brique:
+    def __init__(self, length, width, color="red"):
+        self.length = length
+        self.width = width
+        self.color = color
