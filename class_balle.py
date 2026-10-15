@@ -1,5 +1,5 @@
 class balle:
-    def __init__(self, canvas, x, y, taille=20, vitesse=5, color="red"):
+    def __init__(self, canvas, x, y, taille=15, vitesse=5, color="red"):
         self.canvas = canvas
         self.taille = taille
         self.color = color
@@ -9,7 +9,7 @@ class balle:
         self.dy = -vitesse  # Part vers le haut à droite
 
         # Création de l'ovale sur le canvas
-        self.id = self.canvas.create_oval(x, y, x + taille, y + taille, fill=self.color, outline="")
+        self.id = self.canvas.create_oval(x, y, x + taille, y + taille, fill=self.color, outline="white")
 
     def deplacer(self):
         # 1. Coordonnées actuelles de la balle
