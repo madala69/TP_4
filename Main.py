@@ -7,6 +7,8 @@ TODO:
 
 from tkinter import *
 from class_brique import brique
+from class_raquette import raquette
+
 
 Fenetre= Tk()   #définition de la fenetre tkinter
 Fenetre.title("Jeu de casse brique génial !")
@@ -61,11 +63,11 @@ def mainGame():     #menu maingame
             nouvelle_brique = brique(fond, pos_x, pos_y)
             liste_briques.append(nouvelle_brique)
 
+    raquette(fond,100,500)
 
     fond.pack()
     fond.create_window(50,20, window=score)
     fond.create_window(200,100, window=vies)
-
 
 menu()
 
