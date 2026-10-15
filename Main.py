@@ -14,52 +14,49 @@ img = PhotoImage(file='image.png')
 vitesse_balle = IntVar(value=5)
 
 
-def menu():
+def menu():   #menu
     for widget in Fenetre.winfo_children():
-        widget.destroy()
+            widget.destroy()
 
-    Menu = Canvas(Fenetre, width=500, height=600, background='black')
-    BoutonMenu = Button(Fenetre, text='Lancer la partie', command=mainGame, relief='raised')
-    TitreJeu = Label(Fenetre, text='Casse Brique', bg='maroon', fg='white', font=('Arial', 28, 'bold'))
-    BoutonParametre = Button(Fenetre, text='Parametres', command=parametres, relief='raised')
-    BoutonLeaderboard = Button(Fenetre, text='Leaderboard', command=meilleursScores, relief='raised')
+    Menu=Canvas(Fenetre,width=500,height=600,background='black')
+    BoutonMenu=Button(Fenetre, text='Lancer la partie', command=mainGame, relief='raised',  font=('Arial', 13))
+    TitreJeu=Label(Fenetre, text='Casse Brique',bg='maroon', fg='white',font=('Arial', 28, 'bold'))
+    BoutonParametre=Button(Fenetre, text='Parametres', command=parametres, relief='raised', font=('Arial', 13))
+    BoutonLeaderboard=Button(Fenetre, text='Leaderboard', command=meilleursScores, relief='raised',  font=('Arial', 13))
 
     Menu.pack()
-    Menu.create_image(300, 350, image=img)
-    Menu.create_window(250, 300, window=BoutonMenu)
-    Menu.create_window(250, 340, window=BoutonLeaderboard)
-    Menu.create_window(250, 380, window=BoutonParametre)
-    Menu.create_window(250, 200, window=TitreJeu)
+    Menu.create_image(300,350,image=img)    #crée une image enfant du parent Menu
+    Menu.create_window(250,300,window=BoutonMenu)   #crée un enfant du parent Menu
+    Menu.create_window(250,350,window=BoutonLeaderboard)
+    Menu.create_window(250,400,window=BoutonParametre)
+    Menu.create_window(250,200, window=TitreJeu)
 
 
-def parametres():
+def parametres():   #menu parametres
     for widget in Fenetre.winfo_children():
         widget.destroy()
 
-    fond = Canvas(Fenetre, width=500, height=600, background='black')
-    
-    # Création du curseur (Scale) relié à la variable vitesse_balle
-    curseur_vitesse = Scale(
-        Fenetre, from_=2, to=15, orient=HORIZONTAL, 
-        label="Vitesse de la balle", variable=vitesse_balle,
-        bg='black', fg='white', highlightthickness=0, length=200
-    )
-    BoutonMenu = Button(Fenetre, text='Retour au menu', command=menu, relief='raised')   
+    fond=Canvas(Fenetre,width=500,height=600,background='black')
+    BoutonMenu=Button(Fenetre, text='Retour au menu', command=menu, relief='raised',  font=('Arial', 13))   
+    Check = Checkbutton(Fenetre, width = 15, text='White Mode', font=('Arial', 15))
+    Check2 = Checkbutton(Fenetre, width = 15, text='Option 2', font=('Arial', 15))
+
 
     fond.pack()
-    fond.create_window(250, 220, window=curseur_vitesse)
-    fond.create_window(250, 300, window=BoutonMenu)
+    fond.create_window(240,500,window=BoutonMenu)
+    fond.create_window(240,100,window=Check)
+    fond.create_window(240,200,window=Check2)
 
 
 def meilleursScores():
     for widget in Fenetre.winfo_children():
         widget.destroy()
     
-    fond = Canvas(Fenetre, width=500, height=600, background='black')
-    BoutonMenu = Button(Fenetre, text='Retour au menu', command=menu, relief='raised')   
+    fond=Canvas(Fenetre,width=500,height=600,background='black')
+    BoutonMenu=Button(Fenetre, text='Retour au menu', command=menu, relief='raised', font=('Arial', 13))   
 
     fond.pack()
-    fond.create_window(250, 300, window=BoutonMenu)
+    fond.create_window(240,500,window=BoutonMenu)
 
 
 def mainGame():
