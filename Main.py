@@ -12,7 +12,7 @@ Fenetre.title("Jeu de casse brique génial !")
 Fenetre.resizable(False, False)
 Fenetre.geometry('500x600+400+50')
 Fenetre.config(cursor='heart')
-img = PhotoImage(file='image.png') #transparent image
+img = PhotoImage(file='image.png') 
 
 
 def mainGame():
@@ -24,15 +24,15 @@ def mainGame():
     fond=Canvas(Fenetre,width=500,height=600,background='black')
 
     fond.pack()
-    score.pack(side='right')
-    vies.pack(side='left')
+    fond.create_window(100,100, window=score)
+    fond.create_window(200,100, window=vies)
 
 
 Menu=Canvas(Fenetre,width=500,height=600,background='black')
 BoutonMenu=Button(Fenetre, text='Lancer la partie', command=mainGame, relief='raised')
 TitreJeu=Label(Fenetre, text='Casse Brique',bg='black', fg='green',font=('Arial', 28, 'bold'))
-Menu.pack()
 
+Menu.pack()
 Menu.create_image(300,350,image=img)
 Menu.create_window(250,300,window=BoutonMenu)
 Menu.create_window(250,200, window=TitreJeu)
