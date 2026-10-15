@@ -6,6 +6,7 @@ TODO:
 """
 
 from tkinter import *
+import class_brique
 
 Fenetre= Tk()   #définition de la fenetre tkinter
 Fenetre.title("Jeu de casse brique génial !")
@@ -16,6 +17,8 @@ img = PhotoImage(file='image.png') #importation d'une image
 
 
 def menu():   #menu
+    for widget in Fenetre.winfo_children():
+            widget.destroy()
     Menu=Canvas(Fenetre,width=500,height=600,background='black')
     BoutonMenu=Button(Fenetre, text='Lancer la partie', command=mainGame, relief='raised')
     TitreJeu=Label(Fenetre, text='Casse Brique',bg='black', fg='green',font=('Arial', 28, 'bold'))
@@ -32,17 +35,23 @@ def parametres():   #menu parametres
     for widget in Fenetre.winfo_children():
         widget.destroy()
 
-    fond=Canvas(Fenetre,width=500,height=600,background='black')     
+    fond=Canvas(Fenetre,width=500,height=600,background='black')
+    BoutonMenu=Button(Fenetre, text='Retour au menu', command=menu, relief='raised')   
+
     fond.pack()
+    fond.create_window(250,300,window=BoutonMenu)
 
       
 def mainGame():     #menu maingame
     for widget in Fenetre.winfo_children():
             widget.destroy()
 
+    score=5
     fond=Canvas(Fenetre,width=500,height=600,background='black')        
-    score=Label(Fenetre, text="Mon score:", anchor='nw')
+    score=Label(Fenetre, text=f"Mon score : {score}", anchor='nw')
     vies=Label(Fenetre, text="Vies", bg='black', fg='green',font=('Arial', 15))
+
+
 
     fond.pack()
     fond.create_window(50,20, window=score)
