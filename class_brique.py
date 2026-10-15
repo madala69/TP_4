@@ -11,3 +11,4 @@ class brique:
 
         # On dessine la brique et on stocke son identifiant unique (id)
         self.id = self.canvas.create_rectangle( x1, y1, x2, y2, fill=color, outline="white")
+

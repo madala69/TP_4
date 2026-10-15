@@ -10,13 +10,15 @@ from class_brique import brique
 from class_raquette import raquette
 from class_balle import balle
 
-
-Fenetre= Tk()   #définition de la fenetre tkinter
+Fenetre = Tk()
 Fenetre.title("Jeu de casse brique génial !")
-Fenetre.resizable(False, False)   #interdiction de changer la taille de la fenetre (antibug)
+Fenetre.resizable(False, False)
 Fenetre.geometry('500x600+400+50')
-Fenetre.config(cursor='heart')  #forme du curseur
-img = PhotoImage(file='image.png') #importation d'une image
+Fenetre.config(cursor='heart')
+img = PhotoImage(file='image.png')
+
+# Variable globale Tkinter pour garder en mémoire la vitesse choisie (par défaut : 5)
+vitesse_balle = IntVar(value=5)
 
 
 def menu():   #menu
@@ -66,31 +68,50 @@ def meilleursScores():
     fond.create_window(240,500,window=BoutonMenu)
     fond.create_window(250,100, window=MeilleurScore)
 
-      
-def mainGame():     #menu maingame
-    for widget in Fenetre.winfo_children():
-            widget.destroy()
 
-    score=5
-    vies=3
+def mainGame():
+    for widget in Fenetre.winfo_children():
+        widget.destroy()
+
+    score_val = 5
+    vies_val = 3
 
     fond=Canvas(Fenetre,width=500,height=600,background='black')        
     score=Label(Fenetre, text=f"Mon score : {score}", anchor='nw',  bg='black', fg='green', font=('Arial', 15))
     vies=Label(Fenetre, text=f"Vies: {vies}", bg='black', fg='green',font=('Arial', 15))
     boutonMort=Button(Fenetre,text='mort', command=mort, )
+    fond = Canvas(Fenetre, width=500, height=600, background='black')        
+    score = Label(Fenetre, text=f"Mon score : {score_val}", anchor='nw', bg='black', fg='green', font=('Arial', 15))
+    vies = Label(Fenetre, text=f"Vies: {vies_val}", bg='black', fg='green', font=('Arial', 15))
 
+    # 1. TRÈS IMPORTANT : Afficher le canvas AVANT Fenetre.update()
+    fond.pack()
+    fond.create_window(80, 20, window=score)
+    fond.create_window(450, 20, window=vies)
 
+    # 2. Création des briques
     liste_briques = []
     for ligne in range(5):
         for colonne in range(7):
             pos_x = 15 + colonne * 68  
             pos_y = 60 + ligne * 28   
-
             nouvelle_brique = brique(fond, pos_x, pos_y)
             liste_briques.append(nouvelle_brique)
 
-    raquette(fond,100,500)
-    balle(fond,123,480)
+    # 3. On stocke la raquette dans une variable "ma_raquette"
+    ma_raquette = raquette(fond, 100, 500)
+
+    # 4. On met à jour la fenêtre pour que fond.winfo_width() fasse bien 500x600
+    Fenetre.update()
+
+    # 5. On crée la balle avec la vitesse du curseur (vitesse_balle.get()) et la raquette
+    ma_balle = balle(
+        fond, 200, 300, 
+        vitesse=vitesse_balle.get(), 
+        raquette=ma_raquette, 
+        liste_briques=liste_briques
+    )
+    ma_balle.deplacer()
 
     fond.pack()
     fond.create_window(80,20, window=score)
@@ -111,5 +132,4 @@ def mort():
 
 
 menu()
-
 Fenetre.mainloop()
