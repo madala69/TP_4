@@ -57,6 +57,7 @@ def meilleursScores():
 
     fond.pack()
     fond.create_window(250,300,window=BoutonMenu)
+
       
 def mainGame():     #menu maingame
     for widget in Fenetre.winfo_children():
