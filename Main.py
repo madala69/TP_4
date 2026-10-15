@@ -2,7 +2,7 @@
 Auteur : Adam STIET et Alexandre ODONI
 Date 8/10/2026
 Objectif : créer un jeu casse birque en respectant les bonnes manières
-TODO: 
+TODO: Faire en classes
 """
 
 from tkinter import *
@@ -49,7 +49,7 @@ def parametres():   #menu parametres
 
     fond.pack()
     fond.create_window(240,500,window=BoutonMenu)
-    fond.create_window(240,100,window=Check)
+    fond.create_window(240,150,window=Check)
     fond.create_window(240,200,window=Check2)
 
 
@@ -58,10 +58,13 @@ def meilleursScores():
         widget.destroy()
     
     fond=Canvas(Fenetre,width=500,height=600,background='black')
-    BoutonMenu=Button(Fenetre, text='Retour au menu', command=menu, relief='raised', font=('Arial', 13))   
+    BoutonMenu=Button(Fenetre, text='Retour au menu', command=menu, relief='raised', font=('Arial', 13))
+    MeilleurScore=Label(Fenetre, text='Meilleurs Scores',bg='red', fg='white',font=('Arial', 28, 'bold'))
+
 
     fond.pack()
     fond.create_window(240,500,window=BoutonMenu)
+    fond.create_window(250,100, window=MeilleurScore)
 
       
 def mainGame():     #menu maingame
@@ -74,6 +77,7 @@ def mainGame():     #menu maingame
     fond=Canvas(Fenetre,width=500,height=600,background='black')        
     score=Label(Fenetre, text=f"Mon score : {score}", anchor='nw',  bg='black', fg='green', font=('Arial', 15))
     vies=Label(Fenetre, text=f"Vies: {vies}", bg='black', fg='green',font=('Arial', 15))
+    boutonMort=Button(Fenetre,text='mort', command=mort, )
 
 
     liste_briques = []
@@ -91,6 +95,20 @@ def mainGame():     #menu maingame
     fond.pack()
     fond.create_window(80,20, window=score)
     fond.create_window(450,20, window=vies)
+    fond.create_window(450, 550, window=boutonMort)
+
+def mort():
+    mort = Toplevel(Fenetre)
+    mort.title("Vous avez perdu !")
+    mort.overrideredirect(True)
+    mort.geometry('+450+150')
+
+    boutonmort = Button(mort, text="Fermer", command=mort.destroy)
+    textemort= Label(mort, text='Vous etes mort!')
+
+    textemort.pack(side='top',padx=20, pady=20)
+    boutonmort.pack(side='bottom', padx=20, pady=20)
+
 
 menu()
 
