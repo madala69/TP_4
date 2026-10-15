@@ -77,17 +77,12 @@ def mainGame():
     vies_val = 3
 
     fond=Canvas(Fenetre,width=500,height=600,background='black')        
-    score=Label(Fenetre, text=f"Mon score : {score}", anchor='nw',  bg='black', fg='green', font=('Arial', 15))
-    vies=Label(Fenetre, text=f"Vies: {vies}", bg='black', fg='green',font=('Arial', 15))
-    boutonMort=Button(Fenetre,text='mort', command=mort, )
-    fond = Canvas(Fenetre, width=500, height=600, background='black')        
-    score = Label(Fenetre, text=f"Mon score : {score_val}", anchor='nw', bg='black', fg='green', font=('Arial', 15))
-    vies = Label(Fenetre, text=f"Vies: {vies_val}", bg='black', fg='green', font=('Arial', 15))
+    score=Label(Fenetre, text=f"Mon score : {score_val}", anchor='nw',  bg='black', fg='green', font=('Arial', 15))
+    vies=Label(Fenetre, text=f"Vies: {vies_val}", bg='black', fg='green',font=('Arial', 15))
 
-    # 1. TRÈS IMPORTANT : Afficher le canvas AVANT Fenetre.update()
     fond.pack()
-    fond.create_window(80, 20, window=score)
-    fond.create_window(450, 20, window=vies)
+    fond.create_window(80,20, window=score)
+    fond.create_window(450,20, window=vies)
 
     # 2. Création des briques
     liste_briques = []
@@ -113,10 +108,7 @@ def mainGame():
     )
     ma_balle.deplacer()
 
-    fond.pack()
-    fond.create_window(80,20, window=score)
-    fond.create_window(450,20, window=vies)
-    fond.create_window(450, 550, window=boutonMort)
+
 
 def mort():
     mort = Toplevel(Fenetre)
