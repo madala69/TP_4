@@ -6,7 +6,7 @@ TODO:
 """
 
 from tkinter import *
-import class_brique
+from class_brique import brique
 
 Fenetre= Tk()   #définition de la fenetre tkinter
 Fenetre.title("Jeu de casse brique génial !")
@@ -51,6 +51,15 @@ def mainGame():     #menu maingame
     score=Label(Fenetre, text=f"Mon score : {score}", anchor='nw')
     vies=Label(Fenetre, text="Vies", bg='black', fg='green',font=('Arial', 15))
 
+
+    liste_briques = []
+    for ligne in range(5):
+        for colonne in range(7):
+            pos_x = 15 + colonne * 68  
+            pos_y = 150 + ligne * 28   
+
+            nouvelle_brique = brique(fond, pos_x, pos_y)
+            liste_briques.append(nouvelle_brique)
 
 
     fond.pack()
