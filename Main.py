@@ -73,7 +73,7 @@ def mainGame():
     for widget in Fenetre.winfo_children():
         widget.destroy()
 
-    score_val = 5
+    score_val = 0
     vies_val = 3
 
     fond=Canvas(Fenetre,width=500,height=600,background='black')        
