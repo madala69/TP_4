@@ -104,7 +104,8 @@ def mainGame():
         fond, 200, 300, 
         vitesse=vitesse_balle.get(), 
         raquette=ma_raquette, 
-        liste_briques=liste_briques
+        liste_briques=liste_briques,
+        on_mort=mort  # On passe la fonction mort() comme callback
     )
     ma_balle.deplacer()
 
@@ -114,9 +115,13 @@ def mort():
     mort = Toplevel(Fenetre)
     mort.title("Vous avez perdu !")
     mort.overrideredirect(True)
-    mort.geometry('+450+150')
+    mort.geometry('+550+200')
 
-    boutonmort = Button(mort, text="Fermer", command=mort.destroy)
+    def retour_menu():
+        mort.destroy()
+        menu()
+
+    boutonmort = Button(mort, text="Fermer", command=retour_menu)
     textemort= Label(mort, text='Vous etes mort!')
 
     textemort.pack(side='top',padx=20, pady=20)
