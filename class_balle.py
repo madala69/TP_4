@@ -1,10 +1,11 @@
 class balle:
-    def __init__(self, canvas, x, y, taille=15, vitesse=5, color="red", raquette=None, liste_briques=None):
+    def __init__(self, canvas, x, y, taille=15, vitesse=5, color="red", raquette=None, liste_briques=None, on_mort=None):
         self.canvas = canvas
         self.taille = taille
         self.color = color
         self.raquette = raquette
         self.liste_briques = liste_briques
+        self.on_mort = on_mort  
 
         self.dx = vitesse
         self.dy = -vitesse
@@ -47,4 +48,7 @@ class balle:
             # 6. Appel récursif tant que la balle ne tombe pas en bas
             if y2 < hauteur:
                 self.canvas.after(16, self.deplacer)
+            else:
+                if self.on_mort is not None:
+                    self.on_mort()  # Appelle la fonction de rappel pour gérer la mort de la balle
         
