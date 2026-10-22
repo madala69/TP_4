@@ -1,5 +1,5 @@
 class raquette:
-    def __init__(self, canvas, x, y, length=60, width=10, color="blue"):
+    def __init__(self, canvas, x, y, length=80, width=10, color="blue"):
         self.canvas = canvas
 
         # Coordonnées du rectangle (coin haut-gauche et bas-droit)
@@ -11,24 +11,49 @@ class raquette:
         # On dessine la raquette et on stocke son identifiant unique dans self.id
         self.id = self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="white")
 
-        # Tkinter écoute les flèches et lance automatiquement la bonne fonction
-        self.canvas.bind_all('<Left>', self.aller_gauche)
-        self.canvas.bind_all('<Right>', self.aller_droite)
+        # --- NOUVEAU : Gestion de la vitesse ---
+        self.vitesse_x = 0  # Vitesse actuelle (0 = à l'arrêt)
+        self.vitesse = 6    # Vitesse max de la raquette (à ajuster, plus petit car mis à jour plus souvent)
 
-    def aller_gauche(self, event):
-        # 1. On récupère les coordonnées actuelles [x1, y1, x2, y2] de notre raquette (self.id)
-        coords = self.canvas.coords(self.id)
-        
-        # 2. Si le bord gauche (coords[0], c'est-à-dire x1) est supérieur à 0 :
-        if coords[0] > 0:
-            # 3. On décale la raquette de -20 pixels sur X (vers la gauche) et 0 sur Y
-            self.canvas.move(self.id, -20, 0)
+        # Tkinter écoute l'appui ET le relâchement des flèches
+        self.canvas.bind_all('<KeyPress-Left>', self.presser_gauche)
+        self.canvas.bind_all('<KeyPress-Right>', self.presser_droite)
+        self.canvas.bind_all('<KeyRelease-Left>', self.relacher_gauche)
+        self.canvas.bind_all('<KeyRelease-Right>', self.relacher_droite)
 
-    def aller_droite(self, event):
+        # Lancer l'animation
+        self.boucle_mouvement()
+
+    # --- Fonctions déclenchées quand on APPUIE sur la touche ---
+    def presser_gauche(self, event):
+        self.vitesse_x = -self.vitesse
+
+    def presser_droite(self, event):
+        self.vitesse_x = self.vitesse
+
+    # --- Fonctions déclenchées quand on RELÂCHE la touche ---
+    def relacher_gauche(self, event):
+        # On arrête seulement si la raquette allait bien à gauche
+        # (Pour éviter qu'elle s'arrête si on appuie déjà sur la droite)
+        if self.vitesse_x == -self.vitesse:
+            self.vitesse_x = 0
+
+    def relacher_droite(self, event):
+        if self.vitesse_x == self.vitesse:
+            self.vitesse_x = 0
+
+    # --- Boucle d'animation continue ---
+    def boucle_mouvement(self):
         # 1. On récupère les coordonnées actuelles [x1, y1, x2, y2]
         coords = self.canvas.coords(self.id)
         
-        # 2. Si le bord droit (coords[2], c'est-à-dire x2) est inférieur à 500 (largeur de ta fenêtre) :
-        if coords[2] < 500:
-            # 3. On décale la raquette de +20 pixels sur X (vers la droite) et 0 sur Y
-            self.canvas.move(self.id, 20, 0)
+        # 2. On vérifie les collisions avec les bords gauche (0) et droit (500)
+        # On ne se déplace que si on ne dépasse pas
+        if self.vitesse_x < 0 and coords[0] > 0:
+            self.canvas.move(self.id, self.vitesse_x, 0)
+        elif self.vitesse_x > 0 and coords[2] < 500:
+            self.canvas.move(self.id, self.vitesse_x, 0)
+            
+        # 3. La magie Tkinter : on redemande à exécuter cette fonction dans 16 millisecondes
+        # 1000ms / 16ms = ~60 images par secondes (FPS)
+        self.canvas.after(16, self.boucle_mouvement)
