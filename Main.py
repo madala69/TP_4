@@ -1,8 +1,8 @@
 """
 Auteur : Adam STIET et Alexandre ODONI
-Date 8/10/2026
-Objectif : créer un jeu casse birque en respectant les bonnes manières
-TODO: Faire en classes
+Date : 8/10/2026
+Objectif : créer un jeu casse-brique en programmation orientée objet
+To do : partie 2.2 du sujet de TP
 """
 
 from tkinter import *
@@ -10,123 +10,258 @@ from class_brique import brique
 from class_raquette import raquette
 from class_balle import balle
 
+
+class Pile:
+    """Pile LIFO : conserve l'historique des briques détruites."""
+    def __init__(self):
+        self.elements = []
+
+    def empiler(self, element):
+        self.elements.append(element)
+
+    def depiler(self):
+        if not self.est_vide():
+            return self.elements.pop()
+
+    def est_vide(self):
+        return len(self.elements) == 0
+
+
+class File:
+    """File FIFO : conserve les positions des briques à créer."""
+    def __init__(self):
+        self.elements = []
+
+    def enfiler(self, element):
+        self.elements.append(element)
+
+    def defiler(self):
+        if not self.est_vide():
+            return self.elements.pop(0)
+
+    def est_vide(self):
+        return len(self.elements) == 0
+
+
 Fenetre = Tk()
-Fenetre.title("Jeu de casse brique génial !")
+Fenetre.title("Jeu de casse-brique génial !")
 Fenetre.resizable(False, False)
-Fenetre.geometry('500x600+400+50')
+Fenetre.geometry('500x650+400+50')
 Fenetre.config(cursor='heart')
+
 img = PhotoImage(file='image.png')
 
-# Variable globale Tkinter pour garder en mémoire la vitesse choisie (par défaut : 5)
 vitesse_balle = IntVar(value=5)
 
+score_val = 0
+vies_val = 3
+historique_briques = Pile()
+liste_briques = []
+ma_balle = None
+ma_raquette = None
+fond = None
+jeu_termine = False
 
-def menu():   #menu
+
+def arreter_animations():
+    if ma_balle is not None:
+        ma_balle.arreter()
+    if ma_raquette is not None:
+        ma_raquette.arreter()
+
+def quitter_jeu():
+    arreter_animations()
+    Fenetre.destroy()
+
+def menu():
+    global jeu_termine
+
+    arreter_animations()
+    jeu_termine = True
+
     for widget in Fenetre.winfo_children():
-            widget.destroy()
+        widget.destroy()
 
-    Menu=Canvas(Fenetre,width=500,height=600,background='black')
-    BoutonMenu=Button(Fenetre, text='Lancer la partie', command=mainGame, relief='raised',  font=('Arial', 13))
-    TitreJeu=Label(Fenetre, text='Casse Brique',bg='maroon', fg='white',font=('Arial', 28, 'bold'))
-    BoutonParametre=Button(Fenetre, text='Parametres', command=parametres, relief='raised', font=('Arial', 13))
-    BoutonLeaderboard=Button(Fenetre, text='Leaderboard', command=meilleursScores, relief='raised',  font=('Arial', 13))
+    Menu = Canvas(Fenetre, width=500, height=600, background='black')
+    BoutonJouer = Button(
+        Fenetre, text='Lancer la partie', command=mainGame,
+        relief='raised', font=('Arial', 13)
+    )
+    BoutonQuitter = Button(
+        Fenetre, text='Quitter le jeu', command=quitter_jeu,
+        relief='raised', font=('Arial', 13)
+    )
+    TitreJeu = Label(
+        Fenetre, text='Casse Brique', bg='maroon', fg='white',
+        font=('Arial', 28, 'bold')
+    )
 
     Menu.pack()
-    Menu.create_image(300,350,image=img)    #crée une image enfant du parent Menu
-    Menu.create_window(250,300,window=BoutonMenu)   #crée un enfant du parent Menu
-    Menu.create_window(250,350,window=BoutonLeaderboard)
-    Menu.create_window(250,400,window=BoutonParametre)
-    Menu.create_window(250,200, window=TitreJeu)
+    if img:
+        Menu.create_image(250, 350, image=img)
 
-
-def parametres():   #menu parametres
-    for widget in Fenetre.winfo_children():
-        widget.destroy()
-
-    fond=Canvas(Fenetre,width=500,height=600,background='black')
-    BoutonMenu=Button(Fenetre, text='Retour au menu', command=menu, relief='raised',  font=('Arial', 13))   
-    Check = Checkbutton(Fenetre, width = 15, text='White Mode', font=('Arial', 15))
-    Check2 = Checkbutton(Fenetre, width = 15, text='Option 2', font=('Arial', 15))
-
-
-    fond.pack()
-    fond.create_window(240,500,window=BoutonMenu)
-    fond.create_window(240,150,window=Check)
-    fond.create_window(240,200,window=Check2)
-
-
-def meilleursScores():
-    for widget in Fenetre.winfo_children():
-        widget.destroy()
-    
-    fond=Canvas(Fenetre,width=500,height=600,background='black')
-    BoutonMenu=Button(Fenetre, text='Retour au menu', command=menu, relief='raised', font=('Arial', 13))
-    MeilleurScore=Label(Fenetre, text='Meilleurs Scores',bg='red', fg='white',font=('Arial', 28, 'bold'))
-
-
-    fond.pack()
-    fond.create_window(240,500,window=BoutonMenu)
-    fond.create_window(250,100, window=MeilleurScore)
+    Menu.create_window(250, 200, window=TitreJeu)
+    Menu.create_window(250, 320, window=BoutonJouer)
+    Menu.create_window(250, 400, window=BoutonQuitter)
 
 
 def mainGame():
+    global score_val, vies_val, fond, label_score, label_vies
+    global ma_raquette, liste_briques, historique_briques, jeu_termine
+
+    arreter_animations()
+
     for widget in Fenetre.winfo_children():
         widget.destroy()
 
-    score_val = 5
+    score_val = 0
     vies_val = 3
+    historique_briques = Pile()
+    jeu_termine = False
 
-    fond=Canvas(Fenetre,width=500,height=600,background='black')        
-    score=Label(Fenetre, text=f"Mon score : {score_val}", anchor='nw',  bg='black', fg='green', font=('Arial', 15))
-    vies=Label(Fenetre, text=f"Vies: {vies_val}", bg='black', fg='green',font=('Arial', 15))
+    barre_infos = Frame(Fenetre, bg='black')
+    barre_infos.pack(fill='x')
 
+    label_score = Label(
+        barre_infos, text=f"Mon score : {score_val}",
+        bg='black', fg='green', font=('Arial', 15)
+    )
+    label_vies = Label(
+        barre_infos, text=f"Vies : {vies_val}",
+        bg='black', fg='green', font=('Arial', 15)
+    )
+    bouton_quitter = Button(
+        barre_infos, text='Quitter', command=quitter_jeu
+    )
+
+    label_score.pack(side='left', padx=15, pady=5)
+    label_vies.pack(side='left', padx=15, pady=5)
+    bouton_quitter.pack(side='right', padx=10, pady=3)
+
+    fond = Canvas(Fenetre, width=500, height=600, background='black')
     fond.pack()
-    fond.create_window(80,20, window=score)
-    fond.create_window(450,20, window=vies)
+    Fenetre.update_idletasks()
 
-    # 2. Création des briques
-    liste_briques = []
+    file_positions_briques = File()
     for ligne in range(5):
         for colonne in range(7):
-            pos_x = 15 + colonne * 68  
-            pos_y = 60 + ligne * 28   
-            nouvelle_brique = brique(fond, pos_x, pos_y)
-            liste_briques.append(nouvelle_brique)
+            pos_x = 15 + colonne * 68
+            pos_y = 60 + ligne * 28
+            file_positions_briques.enfiler((pos_x, pos_y))
 
-    # 3. On stocke la raquette dans une variable "ma_raquette"
-    ma_raquette = raquette(fond, 100, 500)
+    liste_briques = []
+    while not file_positions_briques.est_vide():
+        pos_x, pos_y = file_positions_briques.defiler()
+        nouvelle_brique = brique(fond, pos_x, pos_y)
+        liste_briques.append(nouvelle_brique)
 
-    # 4. On met à jour la fenêtre pour que fond.winfo_width() fasse bien 500x600
-    Fenetre.update()
+    ma_raquette = raquette(fond, 210, 520)
 
-    # 5. On crée la balle avec la vitesse du curseur (vitesse_balle.get()) et la raquette
+    lancer_balle()
+
+
+def lancer_balle():
+    global ma_balle
+
+    if jeu_termine:
+        return
+
     ma_balle = balle(
-        fond, 200, 300, 
-        vitesse=vitesse_balle.get(), 
-        raquette=ma_raquette, 
+        fond, 240, 300,
+        vitesse=vitesse_balle.get(),
+        raquette=ma_raquette,
         liste_briques=liste_briques,
-        on_mort=mort  # On passe la fonction mort() comme callback
+        on_mort=perte_vie,
+        on_score=augmenter_score
     )
     ma_balle.deplacer()
 
 
+def augmenter_score(brique_cassee):
+    global score_val
 
-def mort():
-    mort = Toplevel(Fenetre)
-    mort.title("Vous avez perdu !")
-    mort.overrideredirect(True)
-    mort.geometry('+550+200')
+    if jeu_termine:
+        return
+
+    score_val += 10
+    label_score.config(text=f"Mon score : {score_val}")
+
+    historique_briques.empiler(brique_cassee)
+
+    if len(liste_briques) == 0:
+        victoire()
+
+
+def perte_vie():
+    global vies_val
+
+    if jeu_termine:
+        return
+
+    vies_val -= 1
+    label_vies.config(text=f"Vies : {vies_val}")
+
+    if ma_balle is not None:
+        fond.delete(ma_balle.id)
+        ma_balle.arreter()
+
+    if vies_val > 0:
+        lancer_balle()
+    else:
+        mort()
+
+
+def afficher_fin(titre, message):
+    fenetre_fin = Toplevel(Fenetre)
+    fenetre_fin.title(titre)
+    fenetre_fin.resizable(False, False)
 
     def retour_menu():
-        mort.destroy()
+        fenetre_fin.destroy()
         menu()
 
-    boutonmort = Button(mort, text="Fermer", command=retour_menu)
-    textemort= Label(mort, text='Vous etes mort!')
+    texte = Label(fenetre_fin, text=message, font=('Arial', 14))
+    bouton_menu = Button(
+        fenetre_fin, text="Retour au menu", command=retour_menu
+    )
+    bouton_quitter = Button(
+        fenetre_fin, text="Quitter", command=quitter_jeu
+    )
 
-    textemort.pack(side='top',padx=20, pady=20)
-    boutonmort.pack(side='bottom', padx=20, pady=20)
+    texte.pack(side='top', padx=20, pady=20)
+    bouton_menu.pack(side='left', padx=10, pady=10)
+    bouton_quitter.pack(side='right', padx=10, pady=10)
 
+
+def mort():
+    global jeu_termine
+
+    if jeu_termine:
+        return
+
+    jeu_termine = True
+    arreter_animations()
+    afficher_fin(
+        "Vous avez perdu !",
+        f"Vous avez perdu !\nScore final : {score_val}"
+    )
+
+
+def victoire():
+    global jeu_termine
+
+    if jeu_termine:
+        return
+
+    jeu_termine = True
+    arreter_animations()
+    afficher_fin(
+        "Victoire !",
+        f"Toutes les briques sont détruites !\nScore final : {score_val}"
+    )
+
+
+Fenetre.protocol("WM_DELETE_WINDOW", quitter_jeu)
 
 menu()
 Fenetre.mainloop()
