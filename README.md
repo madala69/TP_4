@@ -1,4 +1,4 @@
-# Casse-brique — périmètre de la section 2.1
+# Casse-brique
 
 ## Lancer le jeu
 
