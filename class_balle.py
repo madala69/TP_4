@@ -1,6 +1,20 @@
 class balle:
     def __init__(self, canvas, x, y, taille=15, vitesse=5, color="red",
                  raquette=None, liste_briques=None, on_mort=None, on_score=None):
+        """
+        Rôle de la fonction : Initialise la balle et ses paramètres de déplacement et de collision.
+        Entrée : canvas (Canvas) : Le canevas sur lequel la balle est dessinée.
+                 x (int) : La coordonnée horizontale initiale de la balle.
+                 y (int) : La coordonnée verticale initiale de la balle.
+                 taille (int) : Le diamètre de la balle.
+                 vitesse (int) : La vitesse initiale de la balle.
+                 color (str) : La couleur de la balle.
+                 raquette (raquette) : La raquette avec laquelle la balle peut entrer en collision.
+                 liste_briques (list) : La liste des briques présentes dans le jeu.
+                 on_mort (fonction) : La fonction appelée lorsque la balle tombe.
+                 on_score (fonction) : La fonction appelée lorsqu'une brique est détruite.
+        Sortie : Aucune.
+        """
         self.canvas = canvas
         self.taille = taille
         self.color = color
@@ -19,6 +33,11 @@ class balle:
         )
 
     def deplacer(self):
+        """
+        Rôle de la fonction : Déplace la balle et gère ses collisions avec les murs, la raquette et les briques.
+        Entrée : Aucune.
+        Sortie : Aucune.
+        """
         if not self.actif:
             return
 
@@ -50,6 +69,7 @@ class balle:
         if (self.raquette is not None
                 and self.raquette.id in objets_touches
                 and self.dy > 0):
+
             self.dy = -abs(self.dy)
 
         if self.liste_briques is not None:
@@ -72,6 +92,11 @@ class balle:
         self.after_id = self.canvas.after(16, self.deplacer)
 
     def arreter(self):
+        """
+        Rôle de la fonction : Arrête le déplacement de la balle et annule son animation programmée.
+        Entrée : Aucune.
+        Sortie : Aucune.
+        """
         self.actif = False
 
         if self.after_id is not None:

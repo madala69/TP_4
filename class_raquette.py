@@ -1,5 +1,15 @@
 class raquette:
     def __init__(self, canvas, x, y, length=80, width=10, color="blue"):
+        """
+        Rôle de la fonction : Initialise la raquette, ses commandes clavier et son animation.
+        Entrée : canvas (Canvas) : Le canevas sur lequel la raquette est dessinée.
+                 x (int) : La coordonnée horizontale du coin supérieur gauche.
+                 y (int) : La coordonnée verticale du coin supérieur gauche.
+                 length (int) : La longueur de la raquette.
+                 width (int) : La hauteur de la raquette.
+                 color (str) : La couleur de la raquette.
+        Sortie : Aucune.
+        """
         self.canvas = canvas
 
         x1 = x
@@ -36,22 +46,47 @@ class raquette:
         self.boucle_mouvement()
 
     def presser_gauche(self, event):
+        """
+        Rôle de la fonction : Déclenche le déplacement de la raquette vers la gauche.
+        Entrée : event (Event) : L'événement clavier associé à l'appui sur la flèche gauche.
+        Sortie : Aucune.
+        """
         if self.actif:
             self.vitesse_x = -self.vitesse
 
     def presser_droite(self, event):
+        """
+        Rôle de la fonction : Déclenche le déplacement de la raquette vers la droite.
+        Entrée : event (Event) : L'événement clavier associé à l'appui sur la flèche droite.
+        Sortie : Aucune.
+        """
         if self.actif:
             self.vitesse_x = self.vitesse
 
     def relacher_gauche(self, event):
+        """
+        Rôle de la fonction : Arrête le déplacement vers la gauche lorsque la touche est relâchée.
+        Entrée : event (Event) : L'événement clavier associé au relâchement de la flèche gauche.
+        Sortie : Aucune.
+        """
         if self.vitesse_x == -self.vitesse:
             self.vitesse_x = 0
 
     def relacher_droite(self, event):
+        """
+        Rôle de la fonction : Arrête le déplacement vers la droite lorsque la touche est relâchée.
+        Entrée : event (Event) : L'événement clavier associé au relâchement de la flèche droite.
+        Sortie : Aucune.
+        """
         if self.vitesse_x == self.vitesse:
             self.vitesse_x = 0
 
     def boucle_mouvement(self):
+        """
+        Rôle de la fonction : Déplace la raquette en respectant les limites du canevas.
+        Entrée : Aucune.
+        Sortie : Aucune.
+        """
         if not self.actif:
             return
 
@@ -72,6 +107,11 @@ class raquette:
         self.after_id = self.canvas.after(16, self.boucle_mouvement)
 
     def arreter(self):
+        """
+        Rôle de la fonction : Arrête le mouvement de la raquette et désactive ses raccourcis clavier.
+        Entrée : Aucune.
+        Sortie : Aucune.
+        """
         if not self.actif:
             return
 

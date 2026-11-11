@@ -2,7 +2,6 @@
 Auteur : Adam STIET et Alexandre ODONI
 Date : 8/10/2026
 Objectif : créer un jeu casse-brique en programmation orientée objet
-To do : partie 2.2 du sujet de TP
 """
 
 from tkinter import *
@@ -12,34 +11,72 @@ from class_balle import balle
 
 
 class Pile:
-    """Pile LIFO : conserve l'historique des briques détruites."""
     def __init__(self):
+        """
+        Rôle de la fonction : Initialise une pile vide.
+        Entrée : Aucune.
+        Sortie : Aucune.
+        """
         self.elements = []
 
     def empiler(self, element):
+        """
+        Rôle de la fonction : Ajoute un élément au sommet de la pile.
+        Entrée : element (objet) : L'élément à ajouter dans la pile.
+        Sortie : Aucune.
+        """
         self.elements.append(element)
 
     def depiler(self):
+        """
+        Rôle de la fonction : Retire et renvoie le dernier élément ajouté dans la pile.
+        Entrée : Aucune.
+        Sortie : element (objet) : Le dernier élément de la pile, ou None si la pile est vide.
+        """
         if not self.est_vide():
             return self.elements.pop()
 
     def est_vide(self):
+        """
+        Rôle de la fonction : Vérifie si la pile ne contient aucun élément.
+        Entrée : Aucune.
+        Sortie : bool : True si la pile est vide, False sinon.
+        """
         return len(self.elements) == 0
 
 
 class File:
-    """File FIFO : conserve les positions des briques à créer."""
     def __init__(self):
+        """
+        Rôle de la fonction : Initialise une file vide.
+        Entrée : Aucune.
+        Sortie : Aucune.
+        """
         self.elements = []
 
     def enfiler(self, element):
+        """
+        Rôle de la fonction : Ajoute un élément à la fin de la file.
+        Entrée : element (objet) : L'élément à ajouter dans la file.
+        Sortie : Aucune.
+        """
         self.elements.append(element)
 
     def defiler(self):
+        """
+        Rôle de la fonction : Retire et renvoie le premier élément ajouté dans la file.
+        Entrée : Aucune.
+        Sortie : element (objet) : Le premier élément de la file, ou None si la file est vide.
+        """
         if not self.est_vide():
             return self.elements.pop(0)
 
     def est_vide(self):
+        """
+        Rôle de la fonction : Vérifie si la file ne contient aucun élément.
+        Entrée : Aucune.
+        Sortie : bool : True si la file est vide, False sinon.
+        """
         return len(self.elements) == 0
 
 
@@ -64,16 +101,33 @@ jeu_termine = False
 
 
 def arreter_animations():
+    """
+    Rôle de la fonction : Arrête les animations de la balle et de la raquette.
+    Entrée : Aucune.
+    Sortie : Aucune.
+    """
     if ma_balle is not None:
         ma_balle.arreter()
     if ma_raquette is not None:
         ma_raquette.arreter()
 
+
 def quitter_jeu():
+    """
+    Rôle de la fonction : Ferme proprement la fenêtre principale du jeu.
+    Entrée : Aucune.
+    Sortie : Aucune.
+    """
     arreter_animations()
     Fenetre.destroy()
 
+
 def menu():
+    """
+    Rôle de la fonction : Affiche le menu principal du jeu.
+    Entrée : Aucune.
+    Sortie : Aucune.
+    """
     global jeu_termine
 
     arreter_animations()
@@ -106,6 +160,11 @@ def menu():
 
 
 def mainGame():
+    """
+    Rôle de la fonction : Initialise une partie et crée les briques, la raquette et la zone de jeu.
+    Entrée : Aucune.
+    Sortie : Aucune.
+    """
     global score_val, vies_val, fond, label_score, label_vies
     global ma_raquette, liste_briques, historique_briques, jeu_termine
 
@@ -114,11 +173,13 @@ def mainGame():
     for widget in Fenetre.winfo_children():
         widget.destroy()
 
+    # Initialisation des valeurs de la partie
     score_val = 0
     vies_val = 3
     historique_briques = Pile()
     jeu_termine = False
 
+    # Barre d'informations : score, vies et bouton pour quitter
     barre_infos = Frame(Fenetre, bg='black')
     barre_infos.pack(fill='x')
 
@@ -142,6 +203,7 @@ def mainGame():
     fond.pack()
     Fenetre.update_idletasks()
 
+    # Création des briques : les positions sont placées dans une File (FIFO)
     file_positions_briques = File()
     for ligne in range(5):
         for colonne in range(7):
@@ -149,23 +211,33 @@ def mainGame():
             pos_y = 60 + ligne * 28
             file_positions_briques.enfiler((pos_x, pos_y))
 
+    # On récupère les positions dans leur ordre d'arrivée pour créer les briques
     liste_briques = []
     while not file_positions_briques.est_vide():
         pos_x, pos_y = file_positions_briques.defiler()
         nouvelle_brique = brique(fond, pos_x, pos_y)
         liste_briques.append(nouvelle_brique)
 
+    # Création de la raquette
     ma_raquette = raquette(fond, 210, 520)
 
+    # Lancement de la première balle
     lancer_balle()
 
 
 def lancer_balle():
+    """
+    Rôle de la fonction : Crée une balle et démarre son déplacement.
+    Entrée : Aucune.
+    Sortie : Aucune.
+    """
     global ma_balle
 
     if jeu_termine:
         return
 
+    # La balle appelle perte_vie quand elle tombe et augmenter_score
+    # quand elle détruit une brique.
     ma_balle = balle(
         fond, 240, 300,
         vitesse=vitesse_balle.get(),
@@ -178,21 +250,34 @@ def lancer_balle():
 
 
 def augmenter_score(brique_cassee):
+    """
+    Rôle de la fonction : Ajoute des points au score et conserve la brique détruite dans la pile.
+    Entrée : brique_cassee (brique) : La brique qui vient d'être détruite.
+    Sortie : Aucune.
+    """
     global score_val
 
     if jeu_termine:
         return
 
+    # On augmente le score
     score_val += 10
     label_score.config(text=f"Mon score : {score_val}")
 
+    # On conserve la brique détruite dans la Pile (LIFO)
     historique_briques.empiler(brique_cassee)
 
+    # Victoire lorsque toutes les briques ont été détruites
     if len(liste_briques) == 0:
         victoire()
 
 
 def perte_vie():
+    """
+    Rôle de la fonction : Retire une vie et relance une balle ou termine la partie.
+    Entrée : Aucune.
+    Sortie : Aucune.
+    """
     global vies_val
 
     if jeu_termine:
@@ -201,6 +286,7 @@ def perte_vie():
     vies_val -= 1
     label_vies.config(text=f"Vies : {vies_val}")
 
+    # On efface visuellement la balle tombée
     if ma_balle is not None:
         fond.delete(ma_balle.id)
         ma_balle.arreter()
@@ -212,11 +298,22 @@ def perte_vie():
 
 
 def afficher_fin(titre, message):
+    """
+    Rôle de la fonction : Affiche le résultat de la partie dans une fenêtre secondaire.
+    Entrée : titre (str) : Le titre de la fenêtre de fin.
+             message (str) : Le texte affiché au joueur.
+    Sortie : Aucune.
+    """
     fenetre_fin = Toplevel(Fenetre)
     fenetre_fin.title(titre)
     fenetre_fin.resizable(False, False)
 
     def retour_menu():
+        """
+        Rôle de la fonction : Ferme la fenêtre de fin et affiche le menu principal.
+        Entrée : Aucune.
+        Sortie : Aucune.
+        """
         fenetre_fin.destroy()
         menu()
 
@@ -234,6 +331,11 @@ def afficher_fin(titre, message):
 
 
 def mort():
+    """
+    Rôle de la fonction : Termine la partie lorsque le joueur a perdu toutes ses vies.
+    Entrée : Aucune.
+    Sortie : Aucune.
+    """
     global jeu_termine
 
     if jeu_termine:
@@ -248,6 +350,11 @@ def mort():
 
 
 def victoire():
+    """
+    Rôle de la fonction : Termine la partie lorsque toutes les briques ont été détruites.
+    Entrée : Aucune.
+    Sortie : Aucune.
+    """
     global jeu_termine
 
     if jeu_termine:
