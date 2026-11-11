@@ -9,7 +9,7 @@ class brique:
                  width (int) : La hauteur de la brique.
                  vie (int) : Le nombre de points de vie de la brique.
                  color (str) : La couleur de la brique.
-        Sortie : Aucune.
+        Sortie : Aucune
         """
         self.canvas = canvas
         self.vie = vie

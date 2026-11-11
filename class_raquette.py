@@ -8,7 +8,7 @@ class raquette:
                  length (int) : La longueur de la raquette.
                  width (int) : La hauteur de la raquette.
                  color (str) : La couleur de la raquette.
-        Sortie : Aucune.
+        Sortie : Aucune
         """
         self.canvas = canvas
 

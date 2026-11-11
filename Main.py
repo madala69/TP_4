@@ -15,7 +15,7 @@ class Pile:
         """
         Rôle de la fonction : Initialise une pile vide.
         Entrée : Aucune.
-        Sortie : Aucune.
+        Sortie : Aucune
         """
         self.elements = []
 

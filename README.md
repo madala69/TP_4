@@ -39,4 +39,4 @@ Le module Tkinter doit être disponible dans l'installation de Python.
 
 ## Périmètre réalisé
 
-Cette version couvre l'interface, les commandes clavier, la balle, les rebonds, les collisions, les briques, le score, les vies et les conditions de fin de partie, ainsi que les trois structures de données demandées dans la section 2.1. Les fonctionnalités de la section 2.2 ne sont pas implémentées.
+Cette version couvre l'interface, les commandes clavier, la balle, les rebonds, les collisions, les briques, le score, les vies et les conditions de fin de partie, ainsi que les trois structures de données demandées dans la section 2.1. Les fonctionnalités de la section 2.2 ne sont pas implémentées

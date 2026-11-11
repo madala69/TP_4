@@ -13,7 +13,7 @@ class balle:
                  liste_briques (list) : La liste des briques présentes dans le jeu.
                  on_mort (fonction) : La fonction appelée lorsque la balle tombe.
                  on_score (fonction) : La fonction appelée lorsqu'une brique est détruite.
-        Sortie : Aucune.
+        Sortie : Aucune
         """
         self.canvas = canvas
         self.taille = taille
